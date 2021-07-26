@@ -16,7 +16,7 @@ Tesseract 4 adds a new neural net (LSTM) based OCR engine which is focused on li
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
   s.dependency 'SwiftyTesseract'
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '12.0'
   s.swift_version = '4.2'
   s.pod_target_xcconfig = { 'SWIFT_VERSION' => '4.2' }
 end
