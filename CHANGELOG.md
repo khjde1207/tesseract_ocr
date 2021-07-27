@@ -1,3 +1,7 @@
+## 0.4.4
+
+* add gif
+
 ## 0.4.2
 
 * working on IOS (https://github.com/khjde1207/tesseract_ocr/issues/5)
