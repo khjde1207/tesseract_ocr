@@ -1,4 +1,6 @@
 PODS:
+  - camera (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
   - flutter_tesseract_ocr (0.3.4):
     - Flutter
@@ -10,6 +12,7 @@ PODS:
   - SwiftyTesseract (3.1.3)
 
 DEPENDENCIES:
+  - camera (from `.symlinks/plugins/camera/ios`)
   - Flutter (from `Flutter`)
   - flutter_tesseract_ocr (from `.symlinks/plugins/flutter_tesseract_ocr/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
@@ -20,6 +23,8 @@ SPEC REPOS:
     - SwiftyTesseract
 
 EXTERNAL SOURCES:
+  camera:
+    :path: ".symlinks/plugins/camera/ios"
   Flutter:
     :path: Flutter
   flutter_tesseract_ocr:
@@ -30,6 +35,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider/ios"
 
 SPEC CHECKSUMS:
+  camera: 3164201dc344383e62282964016528c4f5a9ad50
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_tesseract_ocr: e7a711e46346f9b43598ca93871fe857bd6d8535
   image_picker: 50e7c7ff960e5f58faa4d1f4af84a771c671bc4a
