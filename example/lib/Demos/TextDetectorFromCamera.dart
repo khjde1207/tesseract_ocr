@@ -1,5 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:example/camera_view.dart';
-import 'package:example/painters/text_detector_painter.dart';
+import 'package:image/image.dart' as imglib;
 import 'package:flutter/material.dart';
 import 'package:flutter_tesseract_ocr/flutter_tesseract_ocr.dart';
 
@@ -29,28 +31,15 @@ class _TextDetectorViewState extends State<TextDetectorView> {
     );
   }
 
-  Future<void> processImage(InputImage inputImage) async {
+  Future<void> processImage(imglib.Image inputImage) async {
     if (isBusy) return;
     isBusy = true;
-    final recognisedText = await FlutterTesseractOcr.extractTextFromImageData(
-        inputImage,
-        language: "en",
-        args: {
-          "preserve_interword_spaces": "1",
-        });
-    print(recognisedText);
-    // print('Found ${recognisedText.blocks.length} textBlocks');
+    // var croppedImage = imglib.copyCrop(inputImage, 0, 0, 200, 200);
+    var imgData = imglib.encodeJpg(inputImage);
 
-    // if (inputImage.inputImageData?.size != null &&
-    //     inputImage.inputImageData?.imageRotation != null) {
-    //   final painter = TextDetectorPainter(
-    //       recognisedText,
-    //       inputImage.inputImageData!.size,
-    //       inputImage.inputImageData!.imageRotation);
-    //   customPaint = CustomPaint(painter: painter);
-    // } else {
-    //   customPaint = null;
-    // }
+    final recognisedText =
+        await FlutterTesseractOcr.extractTextLive(Uint8List.fromList(imgData));
+    print(recognisedText);
 
     isBusy = false;
     if (mounted) {

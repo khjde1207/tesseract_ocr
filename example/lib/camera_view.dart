@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'main.dart';
 import 'package:flutter_tesseract_ocr/flutter_tesseract_ocr.dart';
+import 'package:image/image.dart' as imglib;
 
 enum ScreenMode { liveFeed, gallery }
 
@@ -19,7 +20,7 @@ class CameraView extends StatefulWidget {
 
   final String title;
   final CustomPaint? customPaint;
-  final Function(InputImage inputImage) onImage;
+  final Function(imglib.Image inputImage) onImage;
   final String ocrData;
   final CameraLensDirection initialDirection;
 
@@ -100,21 +101,21 @@ class _CameraViewState extends State<CameraView>
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 20.0),
-            child: GestureDetector(
-              onTap: _switchScreenMode,
-              child: Icon(
-                _mode == ScreenMode.liveFeed
-                    ? Icons.photo_library_outlined
-                    : (Platform.isIOS
-                        ? Icons.camera_alt_outlined
-                        : Icons.camera),
-              ),
-            ),
-          ),
-        ],
+        // actions: [
+        //   Padding(
+        //     padding: EdgeInsets.only(right: 20.0),
+        //     child: GestureDetector(
+        //       onTap: _switchScreenMode,
+        //       child: Icon(
+        //         _mode == ScreenMode.liveFeed
+        //             ? Icons.photo_library_outlined
+        //             : (Platform.isIOS
+        //                 ? Icons.camera_alt_outlined
+        //                 : Icons.camera),
+        //       ),
+        //     ),
+        //   ),
+        // ],
       ),
       body: _body(),
       // floatingActionButton: _floatingActionButton(),
@@ -168,7 +169,8 @@ class _CameraViewState extends State<CameraView>
                   fit: StackFit.expand,
                   children: <Widget>[
                     _cameraPreviewWidget(),
-                    if (widget.customPaint != null) widget.customPaint!,
+                    _roiWidget()
+                    // if (widget.customPaint != null) widget.customPaint!,
                   ],
                 ),
               ),
@@ -575,6 +577,10 @@ class _CameraViewState extends State<CameraView>
     return Row(children: toggles);
   }
 
+  Widget _roiWidget() {
+    return Image.asset("assets/overlay.gif");
+  }
+
   Widget _cameraPreviewWidget() {
     final CameraController? camera_controller = _controller;
 
@@ -697,7 +703,8 @@ class _CameraViewState extends State<CameraView>
     onNewCameraSelected(camera);
     _controller = CameraController(
       camera,
-      ResolutionPreset.ultraHigh,
+      //Todo -> There Should be a configuration
+      ResolutionPreset.high,
       enableAudio: false,
       imageFormatGroup: ImageFormatGroup.bgra8888,
     );
@@ -727,44 +734,12 @@ class _CameraViewState extends State<CameraView>
   }
 
   Future _processCameraImage(CameraImage image) async {
-    final WriteBuffer allBytes = WriteBuffer();
-    for (Plane plane in image.planes) {
-      allBytes.putUint8List(plane.bytes);
-    }
-    final bytes = allBytes.done().buffer.asUint8List();
-
-    final Size imageSize =
-        Size(image.width.toDouble(), image.height.toDouble());
-
-    final camera = cameras[_cameraIndex];
-    final imageRotation =
-        InputImageRotationMethods.fromRawValue(camera.sensorOrientation) ??
-            InputImageRotation.Rotation_0deg;
-
-    final inputImageFormat =
-        InputImageFormatMethods.fromRawValue(image.format.raw) ??
-            InputImageFormat.BGRA8888;
-    // print("This Image Format is " + inputImageFormat.rawValue.toString());
-
-    final planeData = image.planes.map(
-      (Plane plane) {
-        return InputImagePlaneMetadata(
-          bytesPerRow: plane.bytesPerRow,
-          height: plane.height,
-          width: plane.width,
-        );
-      },
-    ).toList();
-
-    final inputImageData = InputImageData(
-      size: imageSize,
-      imageRotation: imageRotation,
-      inputImageFormat: inputImageFormat,
-      planeData: planeData,
+    var inputImage = imglib.Image.fromBytes(
+      image.width,
+      image.height,
+      image.planes[0].bytes,
+      format: imglib.Format.bgra,
     );
-
-    final inputImage =
-        InputImage.fromBytes(bytes: bytes, inputImageData: inputImageData);
     widget.onImage(inputImage);
   }
 }

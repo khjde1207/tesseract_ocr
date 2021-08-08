@@ -35,15 +35,22 @@ class FlutterTesseractOcr {
     return extractText;
   }
 
-  static Future<String> extractTextFromImageData(InputImage inputImage,
-      {String? language, Map? args}) async {
+  static Future<bool> initTesseract({String? language, Map? args}) async {
     final String tessData = await _loadTessData();
-    final extractText = await _channel
-        .invokeMethod('extractTextFromImageData', <String, dynamic>{
-      'imageData': inputImage.getImageData(),
+    final bool status =
+        await _channel.invokeMethod('initswiftyTesseract', <String, dynamic>{
       'tessData': tessData,
       'language': language,
       'args': args,
+    });
+    return status;
+  }
+
+  static Future<String> extractTextLive(Uint8List image) async {
+    final String tessData = await _loadTessData();
+    final extractText =
+        await _channel.invokeMethod('extractTextLive', <String, dynamic>{
+      'imageData': image,
     });
     return extractText;
   }

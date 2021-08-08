@@ -60,6 +60,10 @@ public class FlutterTesseractOcrPlugin implements MethodCallHandler {
         Thread t = new Thread(new MyRunnable(baseApi, tempFile, recognizedText, result, call.method.equals("extractHocr")));
         t.start();
         break; 
+      
+      case "extractTextLive":
+      //ToDo
+      //Implement Android Side Of Live OCR.
 
       default:
         result.notImplemented();
