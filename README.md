@@ -61,6 +61,7 @@ use https://www.npmjs.com/package/tesseract.js/v/2.1.1
   .
 </body>
 ```
+
 To add languages trained data files in web
 replace `var worker = Tesseract.createWorker();` with
 `var worker = Tesseract.createWorker({langPath: '../lang-data'});`
@@ -68,6 +69,7 @@ and in your web/ folder , add folder `lang-data` , and here add trained data fil
 also make sure that after downloading data traineddata from [here](https://github.com/tesseract-ocr/tessdata) , 
 convert this file to gzip file , for example , to add eng lang ,
 download `eng.traineddata` and compress this to `eng.traineddata.gz` , and add this gz to `lang-data`
+
 ---
 
 ## Getting Started (Android / Ios)
