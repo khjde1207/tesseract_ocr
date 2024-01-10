@@ -39,9 +39,12 @@ public class FlutterTesseractOcrPlugin implements FlutterPlugin, MethodCallHandl
     // TODO: your plugin is no longer attached to a Flutter experience.
     channel.setMethodCallHandler(null);
     channel = null;
-    this.baseApi.recycle();
-    this.baseApi = null;
 
+    // Check that the baseApi exists before calling any methods inside onDetachedFromEngine otherwise the app crashes when quit using the back button on Android
+    if (this.baseApi != null) {
+      this.baseApi.recycle();
+      this.baseApi = null;
+    }
   }
   @Override
   public void onMethodCall(final MethodCall call, final Result result) {
