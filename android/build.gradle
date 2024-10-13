@@ -25,6 +25,7 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
+    namespace "io.paratoner.flutter_tesseract_ocr"
     compileSdkVersion 34
     
      
