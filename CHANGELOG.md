@@ -1,3 +1,6 @@
+## 0.4.29
+ -Wasm support #55 
+
 ## 0.4.27
 - move to flutter gradle's declarative plugins
 
