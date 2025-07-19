@@ -1,14 +1,8 @@
-import 'dart:io';
-import 'dart:js';
-import 'dart:typed_data';
-
-import 'package:flutter/services.dart';
-import 'package:js/js.dart';
-import 'package:js/js_util.dart';
-import 'package:path_provider/path_provider.dart';
+import 'dart:async';
+import 'dart:js_interop';
 
 @JS('_extractText')
-external dynamic _extractText(String imagePath, dynamic args);
+external JSPromise<JSAny?> _extractText(JSAny imagePath, JSAny args);
 
 // FlutterTesseractOcr Class
 class FlutterTesseractOcr {
@@ -17,11 +11,17 @@ class FlutterTesseractOcr {
   /// String _ocrText = await FlutterTesseractOcr.extractText(url, language: langs, args: {
   ///    "preserve_interword_spaces": "1",});
   ///```
-  static extractText(String imagePath, {String? language, Map? args}) async {
-    var promiseData =
-        _extractText(imagePath, jsify({"language": language, "args": args!}));
-    var rtn = await promiseToFuture(promiseData);
-    return rtn;
+  static Future<String> extractText(String imagePath,
+      {String? language, Map? args}) async {
+    final data = {
+      "language": language,
+      // To avoid error when we pass null to args
+      "args": args ?? {},
+    };
+
+    var promiseData = _extractText(imagePath.toJS, (data).jsify()!);
+
+    return promiseData.toDart.then((v) => v.dartify() as String);
   }
 
   /// image to  html text(hocr)
@@ -31,14 +31,18 @@ class FlutterTesseractOcr {
   ///```
   static Future<String> extractHocr(String imagePath,
       {String? language, Map? args}) async {
+    final data = {
+      "language": language,
+      // To avoid error when we pass null to args
+      "args": {...args ?? {}, "tessjs_create_hocr": "1"}
+    };
+
     var promiseData = _extractText(
-        imagePath,
-        jsify({
-          "language": language,
-          "args": {...args!, "tessjs_create_hocr": "1"}
-        }));
-    var rtn = await promiseToFuture(promiseData);
-    return rtn;
+      imagePath.toJS,
+      data.jsify()!,
+    );
+
+    return promiseData.toDart.then((v) => v.dartify() as String);
   }
 
   //web not support
