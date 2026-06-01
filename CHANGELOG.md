@@ -1,3 +1,6 @@
+## 0.4.31
+- feat(ios): Run Tesseract initialization and OCR on background thread to prevent UI freezing
+
 ## 0.4.30
 - 16KB Page Size Compatibility Warning on Google Play Console (due to native libraries) 
 
