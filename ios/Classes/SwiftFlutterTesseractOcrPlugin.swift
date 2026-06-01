@@ -20,17 +20,21 @@ public class SwiftFlutterTesseractOcrPlugin: NSObject, FlutterPlugin {
             
             let params: [String : Any] = args as! [String : Any]
             let language: String? = params["language"] as? String
-            var swiftyTesseract = SwiftyTesseract(language: .english)
-            if let language {
-                swiftyTesseract = SwiftyTesseract(language: .custom(language))
-            }
-            let  imagePath = params["imagePath"] as! String
-            guard let image = UIImage(contentsOfFile: imagePath)else { return }
+            let imagePath = params["imagePath"] as! String
+            guard let image = UIImage(contentsOfFile: imagePath) else { return }
             
-            swiftyTesseract.performOCR(on: image) { recognizedString in
+            DispatchQueue.global(qos: .userInitiated).async {
+                var swiftyTesseract = SwiftyTesseract(language: .english)
+                if let language = language {
+                    swiftyTesseract = SwiftyTesseract(language: .custom(language))
+                }
                 
-                guard let extractText = recognizedString else { return }
-                result(extractText)
+                swiftyTesseract.performOCR(on: image) { recognizedString in
+                    DispatchQueue.main.async {
+                        guard let extractText = recognizedString else { return }
+                        result(extractText)
+                    }
+                }
             }
         }
     }
