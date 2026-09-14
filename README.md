@@ -1,5 +1,12 @@
 # Tesseract OCR for Flutter
 
+> **Fork note (onestudi0/tesseract_ocr):** This fork exists solely to fix `android/build.gradle`,
+> which still declares the defunct `jcenter()` repository — current Gradle rejects the `jcenter()`
+> DSL method outright, so upstream fails to build at all as of this writing. This fork replaces it
+> with `mavenCentral()`. No other changes. If upstream (khjde1207/tesseract_ocr) ever merges an
+> equivalent fix, switch back to the pub.dev release and drop the `dependency_overrides` pointing
+> here.
+
 Tesseract OCR 4.0 for flutter
 This plugin is based on <a href="https://github.com/tesseract-ocr/tesseract">Tesseract OCR 4</a>
 This plugin uses <a href="https://github.com/adaptech-cz/Tesseract4Android/"> Tesseract4Android </a> and <a href="https://github.com/SwiftyTesseract/SwiftyTesseract">SwiftyTesseract</a>.
